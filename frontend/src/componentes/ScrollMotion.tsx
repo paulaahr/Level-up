@@ -1,0 +1,2 @@
+import {useEffect,useState} from 'react';
+export function useScrollMotion(){const [scroll,setScroll]=useState(0);useEffect(()=>{let frame=0;const update=()=>{if(frame)return;frame=requestAnimationFrame(()=>{setScroll(window.scrollY);frame=0})};update();window.addEventListener('scroll',update,{passive:true});return()=>{window.removeEventListener('scroll',update);cancelAnimationFrame(frame)}},[]);return scroll}

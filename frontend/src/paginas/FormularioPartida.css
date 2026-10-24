@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+.inner-main:has(> .formulario-partida-page){padding:0!important;background:#8c9cff!important;background-image:none!important}
+.editorial-app:has(.formulario-partida-page) .editorial-nav{position:relative;z-index:30;background:#f06038!important;border-bottom:2px solid #23151a}
+.editorial-app:has(.formulario-partida-page) .editorial-brand,.editorial-app:has(.formulario-partida-page) .editorial-nav nav a:not(.nav-action),.editorial-app:has(.formulario-partida-page) .menu-toggle{color:#fff1e6!important}
+.editorial-app:has(.formulario-partida-page) .editorial-brand span,.editorial-app:has(.formulario-partida-page) .editorial-brand b{color:#d6f74c!important}
+.editorial-app:has(.formulario-partida-page) .editorial-nav .nav-action{background:#d6f74c!important;color:#23151a!important;border:2px solid #23151a!important;border-radius:0!important;box-shadow:5px 5px 0 #23151a!important;transition:transform .2s,box-shadow .2s}
+.editorial-app:has(.formulario-partida-page) .editorial-nav .nav-action:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 #23151a!important}
+.formulario-partida-page{--orange:#f06038;--cream:#fff1e6;--purple:#8c9cff;--lime:#d6f74c;--ink:#23151a;min-height:100vh;background:var(--purple);color:var(--ink);font-family:'DM Sans',sans-serif;overflow:hidden}
+.formulario-partida-page *{box-sizing:border-box}
+.partida-hero{min-height:440px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(220px,1fr);position:relative;overflow:hidden;background:var(--cream);border-bottom:2px solid var(--ink)}
+.partida-hero-copy{z-index:2;align-self:center;padding:60px clamp(28px,6vw,100px)}
+.partida-kicker,.partida-hero-serial,.partida-form-counter,.partida-toolbar,.partida-art-label,.partida-range-ends,.partida-character-counter{font:700 11px/1.4 'Space Mono',monospace;letter-spacing:.055em}
+.partida-kicker{color:var(--orange)}
+.partida-hero h1{font:400 clamp(64px,7.4vw,116px)/.83 'Bootzy','Archivo Black',sans-serif;letter-spacing:.1rem;color:var(--orange);margin:30px 0 28px;position:relative;z-index:2}
+.partida-hero h1 em{font-style:normal}
+.partida-hero-serial{color:var(--ink)}
+.partida-hero-art{position:relative;min-height:340px;display:grid;place-items:center}
+.partida-art-disc{position:absolute;width:25rem;aspect-ratio:1;right:16%;top:10%;border-radius:50%;background:var(--lime);transform:translateY(-6%)}
+.partida-star{position:relative;z-index:2;width:clamp(150px,21vw,275px);height:auto;color:var(--orange);transform:rotate(-14deg);filter:drop-shadow(8px 8px 0 rgba(35,21,26,.18));transition:transform .45s ease}
+.partida-hero:hover .partida-star{transform:rotate(10deg) scale(1.04)}
+.partida-art-label{position:absolute;bottom:35px;right:38px;color:var(--orange)}
+.partida-body{padding:65px clamp(20px,5vw,80px) 115px;max-width:1460px;margin:auto}
+.partida-toolbar{display:flex;justify-content:space-between;gap:20px;color:var(--cream);margin-bottom:25px}
+.partida-form{background:var(--cream);border:2px solid var(--ink);box-shadow:13px 13px 0 var(--orange);padding:clamp(25px,4.5vw,64px)}
+.partida-form-head{display:flex;align-items:start;justify-content:space-between;gap:20px;border-bottom:2px solid var(--orange);margin-bottom:35px;padding-bottom:26px}
+.partida-form-head h2,.partida-notes-heading h2{font:400 clamp(56px,6vw,95px)/.88 'Bootzy','Archivo Black',sans-serif;letter-spacing:.04rem;color:var(--orange);margin:17px 0 0}
+.partida-period{color:var(--purple)}
+.partida-form-counter{color:var(--orange);white-space:nowrap}
+.partida-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 22px}
+.partida-form-grid .full{grid-column:1/-1}
+.partida-form-grid label,.partida-notes label{display:flex;flex-direction:column;gap:11px;font:800 clamp(14px,1.25vw,17px)/1.2 'DM Sans',sans-serif;color:var(--orange)}
+.partida-form-grid input:not([type=range]),.partida-form-grid select,.partida-notes textarea{width:100%;min-width:0;border:2px solid var(--ink);border-radius:0;background:white;color:var(--ink);padding:17px 18px;font:600 16px 'DM Sans',sans-serif;outline:none;transition:box-shadow .18s,background .18s}
+.partida-form-grid input:focus-visible,.partida-form-grid select:focus-visible,.partida-notes textarea:focus-visible{box-shadow:5px 5px 0 var(--purple);background:var(--cream)}
+.partida-label-row{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.partida-label-row strong{font:400 clamp(37px,4.4vw,62px)/1 'Bootzy','Archivo Black',sans-serif;color:var(--orange)}
+.partida-form-grid input[type=range]{width:100%;height:10px;appearance:none;-webkit-appearance:none;background:linear-gradient(to right,var(--orange) var(--progress),var(--purple) var(--progress));border:1px solid var(--ink);outline:none;cursor:pointer;margin:10px 0 0}
+.partida-form-grid input[type=range]::-webkit-slider-thumb{appearance:none;width:24px;height:24px;border:2px solid var(--ink);border-radius:0;background:var(--lime);box-shadow:3px 3px 0 var(--ink)}
+.partida-form-grid input[type=range]::-moz-range-thumb{width:22px;height:22px;border:2px solid var(--ink);border-radius:0;background:var(--lime);box-shadow:3px 3px 0 var(--ink)}
+.partida-range-ends{display:flex;justify-content:space-between;color:var(--ink)}
+.partida-notes{margin:48px 0 0;padding:clamp(25px,4vw,54px);background:var(--lime);border:2px solid var(--ink)}
+.partida-notes-heading{margin-bottom:25px}
+.partida-notes-heading h2{color:var(--orange);font-size:clamp(52px,6vw,90px)}
+.partida-notes-heading em{font-weight:400;font-style:normal}
+.partida-notes textarea{min-height:150px;resize:vertical}
+.partida-character-counter{display:block;text-align:right;color:var(--ink);margin-top:12px}
+.partida-actions{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:20px;margin-top:36px}
+.partida-cancel,.partida-submit{min-height:58px;display:inline-flex;align-items:center;justify-content:center;padding:17px 24px;text-decoration:none;text-transform:uppercase;font:700 12px/1 'Space Mono',monospace;border:2px solid var(--ink);border-radius:0;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.partida-cancel{background:var(--cream);color:var(--ink)}
+.partida-submit{background:var(--orange);color:var(--cream);box-shadow:6px 6px 0 var(--ink)}
+.partida-cancel:hover,.partida-submit:hover{transform:translate(-2px,-2px)}
+.partida-submit:hover{box-shadow:9px 9px 0 var(--ink);background:var(--purple)}
+.partida-submit:disabled{opacity:.65;cursor:wait;transform:none}
+.partida-empty{padding:40px;background:var(--cream);border:2px solid var(--ink)}
+.editorial-app:has(.formulario-partida-page) .inner-footer {
+  background: #f06038 !important;
+  color: #fff1e6 !important;
+  border-top: 1px solid #23151a;
+}
+
+.editorial-app:has(.formulario-partida-page) .inner-footer a {
+  color: #d6f74c !important;
+}
+@media(max-width:760px){.editorial-app:has(.formulario-partida-page) .editorial-nav nav.mobile-open{position:absolute;top:100%;left:0;width:100%;z-index:100;background:var(--orange,#f06038)!important}.partida-hero{min-height:410px;grid-template-columns:1fr}.partida-hero-copy{padding:56px 24px 45px}.partida-hero h1{font-size:clamp(53px,12vw,80px)}.partida-hero-art{position:absolute;inset:0;min-height:0;pointer-events:none;opacity:.55}.partida-art-disc{width:230px;right:-90px;top:85px}.partida-star{position:absolute;width:125px;right:20px;top:130px}.partida-art-label{display:none}.partida-body{padding:36px 18px 85px}.partida-toolbar{font-size:9px}.partida-form{padding:25px 18px;box-shadow:7px 7px 0 var(--orange)}.partida-form-grid{grid-template-columns:1fr;gap:21px}.partida-form-grid .full{grid-column:auto}.partida-form-head h2{font-size:clamp(53px,11vw,74px)}.partida-notes{margin-top:36px;padding:22px 17px}.partida-notes-heading h2{font-size:clamp(50px,10vw,72px)}.partida-actions{flex-direction:column-reverse;align-items:stretch}.partida-actions>*{width:100%}}
+@media(prefers-reduced-motion:reduce){.partida-star,.partida-submit,.partida-cancel{transition:none!important}}
