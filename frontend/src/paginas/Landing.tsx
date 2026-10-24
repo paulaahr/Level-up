@@ -295,11 +295,6 @@ export function Landing(){
 </section>
 
 
- 
-{/* =========================================
-    04 / SIGUIENTE NIVEL
-========================================= */}
-
 <section className="final-section">
 
   <Reveal>
@@ -313,8 +308,6 @@ export function Landing(){
       <br />
       player ONE?
     </h2>
-
-    {/* BOTONES PRINCIPALES */}
 
     <div className="final-actions">
 

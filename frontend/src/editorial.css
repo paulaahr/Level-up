@@ -131,6 +131,15 @@ a {
   border-radius: 0;
   box-shadow: 3px 3px 0 #23151a;
 }
+.spark,
+.spark-one,
+.spark-two,
+.biblioteca-decoration,
+.partidas-hero-star,
+.detalle-asterisk {
+  font-family: "DejaVu Sans", "Segoe UI Symbol", sans-serif !important;
+  font-variant-emoji: text;
+}
 
 .menu-toggle {
   display: none;
@@ -758,7 +767,7 @@ a {
   align-items: center;
   font: 900 clamp(18px,2.5vw,36px) "Archivo Black",sans-serif;
   letter-spacing: -1px;
-  border: 3px solid var(--ink);
+  border: 1px solid var(--ink);
   transition: .2s;
 }
 
@@ -1594,7 +1603,7 @@ a {
   padding: 60px;
   color: #d6f74c;
   font-family: "Archivo Black", sans-serif;
-  font-size: clamp(55px, 8vw, 140px);
+  font-size: 5rem;
   font-weight: 900;
   line-height: 0.9;
 }
