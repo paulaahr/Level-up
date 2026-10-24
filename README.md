@@ -88,7 +88,17 @@ curl http://localhost:3000/api/videojuegos/ID/resumen
 6. Agrega una regla de rewrite de `/*` hacia `/index.html` para que React Router funcione al refrescar una ruta.
 7. Ajusta en Atlas la lista de acceso de red de forma segura según la red del backend. Comprueba CORS entre los dos dominios.
 
-**URLs públicas (completar tras desplegar):** Frontend: `PENDIENTE` · Backend: `PENDIENTE`.
+### URLs públicas
+
+- Frontend: https://level-up-gluw.onrender.com/
+- Backend: https://level-up-paula.onrender.com
+- Estado de la API: https://level-up-paula.onrender.com/api/salud
+
+### Control de versiones
+
+El proyecto se desarrolló utilizando ramas de trabajo
+y commits descriptivos. El frontend se integró en
+main mediante el Pull Request #2.
 
 ## Demo final
 
