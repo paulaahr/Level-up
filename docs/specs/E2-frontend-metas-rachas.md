@@ -80,14 +80,14 @@ Crear/editar DEBE rechazar fecha de inicio posterior al reloj actual en la UI co
 
 Editar DEBE precargar desde GET `/partidas/:id` y mostrar el juego sin permitir reasignarlo. Una referencia no válida/ausente DEBE mostrar error y bloquear envío. Añadir accesos «Editar» desde historial del detalle y listado de sesiones no cambia sus tablas, fuentes ni identidad visual más allá de la acción necesaria. El detalle DEBE permitir eliminar una partida con confirmación nativa y mostrar un error de acción en E2 si falla.
 
-Después de POST, PUT o DELETE exitoso DEBE solicitarse de nuevo progreso, resumen E1 e historial del juego afectado. La estrategia DEBE ser explícita:
+Después de POST, PUT o DELETE exitoso DEBE solicitarse de nuevo el progreso semanal del videojuego afectado, también al eliminar desde el historial global y aunque no esté visible el detalle. Cuando el detalle esté visible o se monte tras navegar, DEBEN actualizarse además el resumen E1 y el historial de ese juego. La estrategia DEBE ser explícita:
 
 1. Formularios de creación/edición navegan al detalle tras guardar, indicando una revisión en el estado de navegación; el montaje o cambio de revisión vuelve a consultar.
 2. Borrado desde el detalle incrementa la revisión local y dispara la misma secuencia, sin recargar la página.
-3. Borrado desde el listado global refresca esa lista; al volver al detalle se consulta siempre de nuevo al montar. El router actual muestra una de esas páginas cada vez. NO DEBE mantenerse una caché global de progreso que pueda devolver datos anteriores ni exigirse sincronización entre pestañas o WebSocket fuera del alcance.
+3. Antes de borrar desde el historial global, DEBE conservarse el ID del videojuego de la partida, sea una referencia por ID o un juego poblado. Después de confirmar DELETE, DEBE refrescarse la lista y ejecutarse GET de progreso para ese ID, sin esperar a volver al detalle ni intentar recuperar la partida ya eliminada. Al volver al detalle DEBE consultarse de nuevo al montar. NO DEBE mantenerse una caché global de progreso que pueda devolver datos anteriores ni exigirse sincronización entre pestañas o WebSocket.
 4. Una operación exitosa DEBE esperar su respuesta antes de refrescar; respuestas de una revisión anterior NO DEBEN sobrescribir la nueva.
 
-Guardar y refrescar DEBEN tener errores separados. Si la escritura falló, NO DEBE anunciarse éxito ni navegar como si se hubiera guardado. Si se guardó pero falla el GET, DEBE informar «La partida se guardó; no se pudo actualizar el progreso» y ofrecer reintentar solo la consulta, sin repetir la escritura. El valor anterior DEBE ocultarse o etiquetarse como no actualizado mientras hay error; NO DEBE mostrarse como resultado nuevo.
+Guardar/eliminar y refrescar DEBEN tener errores separados. Si la escritura falló, NO DEBE anunciarse éxito ni navegar como si se hubiera guardado o eliminado. Si tuvo éxito pero falla el GET, DEBE informar «La partida se guardó; no se pudo actualizar el progreso» o «La partida se eliminó; no se pudo actualizar el progreso», según la operación, y ofrecer reintentar solo la consulta del juego afectado, sin repetir POST, PUT o DELETE. Esto también se aplica al borrado global. El valor anterior DEBE ocultarse o etiquetarse como no actualizado mientras hay error; NO DEBE mostrarse como resultado nuevo.
 
 ## Estados, accesibilidad y diseño autorizado
 
@@ -119,61 +119,70 @@ Comandos propuestos aún inexistentes: `npm.cmd --prefix frontend run test` para
 
 ## Criterio de aceptación → verificación
 
-**S:** servicio/contrato; **C:** componente con Testing Library; **E:** navegador con backend aislado; **M:** revisión manual registrada. Cálculos compartidos se prueban como entrega y representación; su prueba pura está en backend. Cada fila conserva el criterio original, incluida la parte que comparte con la otra spec.
+**S:** servicio/contrato; **C:** componente con Testing Library; **E:** navegador con backend aislado; **M:** revisión manual registrada. Cálculos compartidos se prueban como entrega y representación; su prueba pura está en backend. Cada fila conserva el criterio original, incluida la parte que comparte con la otra spec. La columna de tickets solo contiene asignaciones explícitas de ese criterio en el backlog; T-19, cuando figura, es responsable de su verificación integral, no una sustitución de la implementación principal. Los apoyos sin asignación del criterio se documentan por separado.
 
-| Criterio | Verificación prevista y resultado exigido                                                                              | Tickets          |
-| -------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| CA-E2-01 | C/E formulario 5 h, 4 días, dos hitos; éxito y consulta de activa; backend demuestra default.                          | T-14, T-15       |
-| CA-E2-02 | S/C consulta individual/listado: identidad y estado sin juego cruzado.                                                 | T-14, T-15       |
-| CA-E2-03 | C matriz de horas válidas e inválidas, mensajes y sin envío inválido; E rechazo servidor conserva entrada.             | T-15             |
-| CA-E2-04 | C días enteros 1/7 y casos fuera de rango/decimales/vacío/tipos.                                                       | T-15             |
-| CA-E2-05 | C cero/cinco hitos permitidos, sexto bloqueado con explicación, fallo conserva lista.                                  | T-15             |
-| CA-E2-06 | C objetivos 1/50,5/100 permitidos y fuera de rango/ausente rechazados.                                                 | T-15             |
-| CA-E2-07 | S/E juego inválido/inexistente: mensaje, sin navegación de éxito ni meta creada.                                       | T-14, T-15       |
-| CA-E2-08 | C/E meta inválida/inexistente en precarga bloquea guardado y ofrece retorno.                                           | T-15             |
-| CA-E2-10 | E crear con anteriores inactivas conserva listado y juego ajeno; integridad es backend.                                | T-15, T-19       |
-| CA-E2-11 | S/C conflicto sobrevenido al guardar: mensaje, valores conservados y sin reemplazo de vigente.                         | T-14, T-15       |
-| CA-E2-12 | C/E edición de objetivos/hitos, error conserva entrada y ficha del juego intacta.                                      | T-15             |
-| CA-E2-13 | E cambiar 6/4→3/2 y nueva consulta: 50→100 y cumplimiento true.                                                        | T-15, T-16       |
-| CA-E2-14 | C/E cancelar confirmación no envía PATCH; confirmar inactiva y refresca; fallo conserva.                               | T-15             |
-| CA-E2-15 | C/E histórico de objetivos distingue activa y anterior, sin gráfico ni uso de anterior como actual.                    | T-15, T-16       |
-| CA-E2-16 | C/E periodo civil 9–15 visible sin corrimiento en navegadores de distintas zonas.                                      | T-16             |
-| CA-E2-17 | C respuesta 3,5/70 presentada igual, días separados y barra 70.                                                        | T-16             |
-| CA-E2-18 | C respuesta de 97 minutos ya calculada como 1,6/53, sin redondearla otra vez.                                          | T-16             |
-| CA-E2-19 | C 7/5: texto 7 horas reales, barra 100, no 140 ni recorte de horas.                                                    | T-16             |
-| CA-E2-20 | E partidas repetidas y ajenas: respuesta y vista con dos días, sin sumas en React.                                     | T-16, T-19       |
-| CA-E2-21 | E formulario Ecuador y respuesta tras cruce domingo/lunes; ninguna actividad extra el lunes.                           | T-16, T-17, T-19 |
-| CA-E2-22 | C/E actual 3/mejor 5 y etiquetas correctas, sin máximo limitado a semana en UI.                                        | T-16             |
-| CA-E2-23 | C/E hoy sin sesión/ayer sí: 3 días vigentes, no 4 y no 0.                                                              | T-16             |
-| CA-E2-24 | C/E racha rota 0/mejor 5 se presentan diferenciadas.                                                                   | T-16             |
-| CA-E2-25 | E varios registros de día y otro juego no inflan contadores de respuesta/vista.                                        | T-16, T-19       |
-| CA-E2-26 | C hitos 25/50 alcanzados, 100 pendiente; no checkbox manual.                                                           | T-16             |
-| CA-E2-27 | E editar avance 60→40 y refrescar: hito 50 pendiente, logros manuales intactos.                                        | T-16, T-17, T-19 |
-| CA-E2-28 | E registro histórico anterior no cambia hito del avance actual.                                                        | T-16, T-17, T-19 |
-| CA-E2-29 | C meta con hitos y cero partidas: todos pendientes.                                                                    | T-16             |
-| CA-E2-30 | C/E solo inactivas: actividad y llamada a crear, sin barra porcentual ni hitos anteriores.                             | T-14, T-16       |
-| CA-E2-31 | C meta sin actividad: objetivos y ceros, hitos pendientes, no error.                                                   | T-16             |
-| CA-E2-32 | C sin metas/partidas: ceros, invitación y ausencia de porcentaje/hitos.                                                | T-16             |
-| CA-E2-33 | S/C recurso inválido/ausente: ErrorVista sin sustituir por vacío exitoso.                                              | T-14, T-16       |
-| CA-E2-34 | C/E Completado explica restricción; intento de activación rechazado no deja activa.                                    | T-15, T-16       |
-| CA-E2-35 | E flujo de estado existente recibe conflicto al completar con activa; no se muestra cambio exitoso.                    | T-15, T-19       |
-| CA-E2-36 | C/E no nuevo estado Abandonado, En pausa no bloquea por supuesto abandono.                                             | T-15, T-16       |
-| CA-E2-37 | C utilidad de fecha/E formulario pasado o igual a ahora; precarga independiente de zona y registro histórico.          | T-17             |
-| CA-E2-38 | C/E futuro hoy/otro día bloqueado, servidor autoritativo y error conserva valores.                                     | T-17             |
-| CA-E2-39 | C/E precargar y editar campos, nueva consulta y contadores/hitos tras respuesta sin recarga.                           | T-17             |
-| CA-E2-40 | C/E límites 1–1440/0–100/500 y datos inválidos conservados sin escritura parcial.                                      | T-17             |
-| CA-E2-41 | S/C edición/borrado ausente o inválido muestra fallo y no actualiza como éxito.                                        | T-14, T-17       |
-| CA-E2-42 | E POST/DELETE disparan consultas; eliminar última sesión muestra ceros y no datos viejos.                              | T-17             |
-| CA-E2-43 | C/E escritura fallida y GET fallido después de escritura exitosa: mensajes distintos, reintento solo GET.              | T-14, T-17       |
-| CA-E2-44 | E confirmación de borrado E1 y retorno; consultas posteriores no encuentran juego/hijos; integridad es backend.        | T-19             |
-| CA-E2-47 | C formulario modifica todos los campos/hitos, errores ligados y bloqueo de doble envío.                                | T-15             |
-| CA-E2-48 | C/E detalle muestra todos los indicadores y no equipara porcentaje con cumplimiento.                                   | T-16             |
-| CA-E2-49 | C promesas pendientes/rechazadas/listas vacías: carga, reintento y vacío diferenciados.                                | T-15, T-16       |
-| CA-E2-50 | C/E/M teclado, foco, labels, alertas, nombres y aria de barra; contraste medido.                                       | T-18             |
-| CA-E2-51 | E/M 360/768/1280, sin solapamientos; movimiento reducido y variables/tipos según DESIGN.md.                            | T-18             |
-| CA-E2-56 | C/E 7 h/3 días no cumplida aunque barra 100; datos 5/4 sí; evaluación mensual prevista en backend, sin nueva pantalla. | T-16, T-19       |
+| Criterio | Verificación prevista y resultado exigido                                                                                                                                                                | Tickets    |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| CA-E2-01 | C/E formulario 5 h, 4 días, dos hitos; éxito y consulta de activa; backend demuestra default.                                                                                                            | T-14, T-15 |
+| CA-E2-02 | S/C consulta individual/listado: identidad y estado sin juego cruzado.                                                                                                                                   | T-14, T-15 |
+| CA-E2-03 | C matriz de horas válidas e inválidas, mensajes y sin envío inválido; E rechazo servidor conserva entrada.                                                                                               | T-15       |
+| CA-E2-04 | C días enteros 1/7 y casos fuera de rango/decimales/vacío/tipos.                                                                                                                                         | T-15       |
+| CA-E2-05 | C cero/cinco hitos permitidos, sexto bloqueado con explicación, fallo conserva lista.                                                                                                                    | T-15       |
+| CA-E2-06 | C objetivos 1/50,5/100 permitidos y fuera de rango/ausente rechazados.                                                                                                                                   | T-15       |
+| CA-E2-07 | S/E juego inválido/inexistente: mensaje, sin navegación de éxito ni meta creada.                                                                                                                         | T-15       |
+| CA-E2-08 | C/E meta inválida/inexistente en precarga bloquea guardado y ofrece retorno.                                                                                                                             | T-15       |
+| CA-E2-10 | E crear con anteriores inactivas conserva listado y juego ajeno; integridad es backend.                                                                                                                  | T-19       |
+| CA-E2-11 | S/C conflicto sobrevenido al guardar: mensaje, valores conservados y sin reemplazo de vigente.                                                                                                           | T-15       |
+| CA-E2-12 | C/E edición de objetivos/hitos, error conserva entrada y ficha del juego intacta.                                                                                                                        | T-15       |
+| CA-E2-13 | E cambiar 6/4→3/2 y nueva consulta: 50→100 y cumplimiento true.                                                                                                                                          | T-15, T-19 |
+| CA-E2-14 | C/E cancelar confirmación no envía PATCH; confirmar inactiva y refresca; fallo conserva.                                                                                                                 | T-15       |
+| CA-E2-15 | C/E histórico de objetivos distingue activa y anterior, sin gráfico ni uso de anterior como actual.                                                                                                      | T-15, T-19 |
+| CA-E2-16 | C/E periodo civil 9–15 visible sin corrimiento en navegadores de distintas zonas.                                                                                                                        | T-16       |
+| CA-E2-17 | C respuesta 3,5/70 presentada igual, días separados y barra 70.                                                                                                                                          | T-16       |
+| CA-E2-18 | C respuesta de 97 minutos ya calculada como 1,6/53, sin redondearla otra vez.                                                                                                                            | T-16       |
+| CA-E2-19 | C 7/5: texto 7 horas reales, barra 100, no 140 ni recorte de horas.                                                                                                                                      | T-16       |
+| CA-E2-20 | E partidas repetidas y ajenas: respuesta y vista con dos días, sin sumas en React.                                                                                                                       | T-16, T-19 |
+| CA-E2-21 | E formulario Ecuador y respuesta tras cruce domingo/lunes; ninguna actividad extra el lunes.                                                                                                             | T-16, T-19 |
+| CA-E2-22 | C/E actual 3/mejor 5 y etiquetas correctas, sin máximo limitado a semana en UI.                                                                                                                          | T-16       |
+| CA-E2-23 | C/E hoy sin sesión/ayer sí: 3 días vigentes, no 4 y no 0.                                                                                                                                                | T-16       |
+| CA-E2-24 | C/E racha rota 0/mejor 5 se presentan diferenciadas.                                                                                                                                                     | T-16       |
+| CA-E2-25 | E varios registros de día y otro juego no inflan contadores de respuesta/vista.                                                                                                                          | T-16, T-19 |
+| CA-E2-26 | C hitos 25/50 alcanzados, 100 pendiente; no checkbox manual.                                                                                                                                             | T-16       |
+| CA-E2-27 | E editar avance 60→40 y refrescar: hito 50 pendiente, logros manuales intactos.                                                                                                                          | T-16, T-19 |
+| CA-E2-28 | E registro histórico anterior no cambia hito del avance actual.                                                                                                                                          | T-16, T-19 |
+| CA-E2-29 | C meta con hitos y cero partidas: todos pendientes.                                                                                                                                                      | T-16       |
+| CA-E2-30 | C/E solo inactivas: actividad y llamada a crear, sin barra porcentual ni hitos anteriores.                                                                                                               | T-14, T-16 |
+| CA-E2-31 | C meta sin actividad: objetivos y ceros, hitos pendientes, no error.                                                                                                                                     | T-16       |
+| CA-E2-32 | C sin metas/partidas: ceros, invitación y ausencia de porcentaje/hitos.                                                                                                                                  | T-16       |
+| CA-E2-33 | S/C recurso inválido/ausente: ErrorVista sin sustituir por vacío exitoso.                                                                                                                                | T-14, T-16 |
+| CA-E2-34 | C/E Completado explica restricción; intento de activación rechazado no deja activa.                                                                                                                      | T-15, T-16 |
+| CA-E2-35 | E flujo de estado existente recibe conflicto al completar con activa; no se muestra cambio exitoso.                                                                                                      | T-15, T-19 |
+| CA-E2-36 | C/E no nuevo estado Abandonado, En pausa no bloquea por supuesto abandono.                                                                                                                               | T-15, T-16 |
+| CA-E2-37 | C utilidad de fecha/E formulario pasado o igual a ahora; precarga independiente de zona y registro histórico.                                                                                            | T-17       |
+| CA-E2-38 | C/E futuro hoy/otro día bloqueado, servidor autoritativo y error conserva valores.                                                                                                                       | T-17       |
+| CA-E2-39 | C/E precargar y editar campos, nueva consulta y contadores/hitos tras respuesta sin recarga.                                                                                                             | T-17       |
+| CA-E2-40 | C/E límites 1–1440/0–100/500 y datos inválidos conservados sin escritura parcial.                                                                                                                        | T-17       |
+| CA-E2-41 | S/C edición/borrado ausente o inválido muestra fallo y no actualiza como éxito.                                                                                                                          | T-14, T-17 |
+| CA-E2-42 | C/E POST y DELETE: comprobar GET de progreso posterior al éxito; incluir borrado desde historial global sin abrir detalle, ID conservado y última sesión en ceros. PUT se comprueba también en CA-E2-39. | T-17       |
+| CA-E2-43 | C/E fallo de escritura y GET fallido tras guardar o eliminar, incluido historial global: mensajes distintos; reintento solo GET, sin repetir POST/PUT/DELETE ni presentar datos anteriores como nuevos.  | T-14, T-17 |
+| CA-E2-44 | E confirmación de borrado E1 y retorno; consultas posteriores no encuentran juego/hijos; integridad es backend.                                                                                          | T-19       |
+| CA-E2-47 | C formulario modifica todos los campos/hitos, errores ligados y bloqueo de doble envío.                                                                                                                  | T-15       |
+| CA-E2-48 | C/E detalle muestra todos los indicadores y no equipara porcentaje con cumplimiento.                                                                                                                     | T-16       |
+| CA-E2-49 | C promesas pendientes/rechazadas/listas vacías: carga, reintento y vacío diferenciados.                                                                                                                  | T-15, T-16 |
+| CA-E2-50 | C/E/M teclado, foco, labels, alertas, nombres y aria de barra; contraste medido.                                                                                                                         | T-18       |
+| CA-E2-51 | E/M 360/768/1280, sin solapamientos; movimiento reducido y variables/tipos según DESIGN.md.                                                                                                              | T-18       |
+| CA-E2-56 | C/E 7 h/3 días no cumplida aunque barra 100; datos 5/4 sí; evaluación mensual prevista en backend, sin nueva pantalla.                                                                                   | T-16, T-19 |
 
 CA-E2-09, CA-E2-45, CA-E2-46 y CA-E2-52 a CA-E2-55 se verifican como garantías de servidor/configuración en la spec backend. Los mensajes de sus errores se consumen por las reglas de interfaz, sin adjudicar al frontend la prueba de concurrencia o selección de DB.
+
+### Apoyo transversal sin reasignar criterios
+
+| Apoyo técnico | Criterio que consume el resultado | Límite de responsabilidad                                                                                                                                                               |
+| ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Apoyo de T-14 | CA-E2-07, CA-E2-11                | El transporte permite recibir errores de referencia o conflicto; la aceptación de esos casos en el formulario se asigna a T-15.                                                         |
+| Apoyo de T-15 | CA-E2-10                          | El formulario permite crear la meta; la comprobación integral de aislamiento entre juegos y conservación de inactivas corresponde aquí a T-19. La unicidad pertenece a T-06 en backend. |
+| Apoyo de T-16 | CA-E2-13, CA-E2-15                | La vista presenta el progreso devuelto después del cambio; estos criterios pertenecen a T-15 y a la verificación integral de T-19.                                                      |
+| Apoyo de T-17 | CA-E2-21, CA-E2-27, CA-E2-28      | Los flujos de partidas aportan las mutaciones o fechas de prueba; estos criterios se verifican en la vista mediante T-16 y en el flujo integral mediante T-19.                          |
 
 ## Ticket → archivos afectados
 
@@ -186,11 +195,13 @@ CA-E2-09, CA-E2-45, CA-E2-46 y CA-E2-52 a CA-E2-55 se verifican como garantías 
 | T-15   | N `frontend/src/paginas/FormularioMeta.tsx`, `frontend/src/paginas/FormularioMeta.css`, `frontend/src/componentes/HistorialMetas.tsx`, `frontend/tests/FormularioMeta.test.tsx`; E `frontend/src/App.tsx`                                                                                                                                                                                                               | Formulario, listado/historial de objetivos y rutas de meta; no edición de juegos.           |
 | T-16   | N `frontend/src/componentes/ProgresoSemanal.tsx`, `frontend/src/componentes/ProgresoSemanal.css`, `frontend/tests/ProgresoSemanal.test.tsx`; E `frontend/src/paginas/Detalle.tsx`                                                                                                                                                                                                                                       | Sección E2 e integración con historial de metas; no reescribir resumen/logros de E1.        |
 | T-17   | E `frontend/src/paginas/FormularioPartida.tsx`, `frontend/src/paginas/FormularioPartida.css`, `frontend/src/paginas/Partidas.tsx`, `frontend/src/paginas/Detalle.tsx`, `frontend/src/App.tsx`, `frontend/src/api/partidasApi.ts`, `frontend/package.json`, `frontend/package-lock.json`; N `frontend/src/utilidades/fechasEcuador.ts`, `frontend/tests/partidas-flujo.test.tsx`, `frontend/tests/fechasEcuador.test.ts` | Edición, zona IANA y refrescos; polyfill temporal compatible, no nuevas funciones de juego. |
-| T-18   | N inicialmente T-15/T-16 `frontend/src/paginas/FormularioMeta.tsx`, `frontend/src/paginas/FormularioMeta.css`, `frontend/src/componentes/HistorialMetas.tsx`, `frontend/src/componentes/ProgresoSemanal.tsx`, `frontend/src/componentes/ProgresoSemanal.css`; E `frontend/src/paginas/FormularioPartida.css`; N `frontend/tests/accesibilidad-e2.test.tsx`                                                              | Ajustes únicamente E2, contraste/foco y adaptación; no tocar estilos globales ni DESIGN.md. |
+| T-18   | N inicialmente T-15/T-16 `frontend/src/paginas/FormularioMeta.tsx`, `frontend/src/paginas/FormularioMeta.css`, `frontend/src/componentes/HistorialMetas.tsx`, `frontend/src/componentes/ProgresoSemanal.tsx`, `frontend/src/componentes/ProgresoSemanal.css`; E `frontend/src/paginas/FormularioPartida.tsx`, `frontend/src/paginas/FormularioPartida.css`; N `frontend/tests/accesibilidad-e2.test.tsx`                | Ajustes únicamente E2, contraste/foco y adaptación; no tocar estilos globales ni DESIGN.md. |
 | T-19   | E `frontend/package.json`, `frontend/package-lock.json`; N `frontend/playwright.config.ts`, `frontend/vite.e2e.config.ts`, `frontend/e2e/metas-rachas.spec.ts`, `frontend/e2e/partidas-progreso.spec.ts`, `frontend/e2e/diseno-accesibilidad.spec.ts`                                                                                                                                                                   | Navegador con servicio aislado; no fixtures personales ni secretos.                         |
 | T-20   | E `docs/backlog/E2-metas-y-rachas.md`; N `docs/AUDITORIA.md`, `docs/bitacora-agente.md`                                                                                                                                                                                                                                                                                                                                 | Consolidar en fase futura evidencia real y tabla de diseño; no crear esos archivos ahora.   |
 
 Las rutas backend de soporte y los tests de dominio pertenecen a la otra spec. «N inicialmente» indica archivos creados en un ticket previo; se editan después sin dejar de estar identificados como nuevos respecto al diagnóstico. La revisión final DEBE comprobar que todos los archivos E existen y que ninguno N se ha creado durante esta fase documental.
+
+La inclusión de `frontend/src/paginas/FormularioPartida.tsx` y su CSS en T-18 DEBE limitarse a los ajustes de accesibilidad de CA-E2-50 y CA-E2-51 que justifique la revisión: etiquetas, nombres accesibles, mensajes asociados, foco, contraste y operabilidad responsive. NO DEBE cambiar contratos, validaciones de negocio, navegación o cálculos de partidas bajo ese ticket.
 
 ## Revisión de coherencia y límites de verificación
 
@@ -201,3 +212,5 @@ Referencias técnicas: [contraste de texto W3C](https://www.w3.org/WAI/WCAG22/Un
 La aprobación futura de esta spec DEBE autorizar sus contratos y archivos dentro de los tickets existentes, no una reescritura del diseño o del cliente global. **Registro de aprobación: pendiente.** Ningún resultado de esta spec está verificado funcionalmente hasta ejecutar y registrar sus pruebas.
 
 La comprobación documental de Fase 5 verificó 49 criterios en esta tabla y 50 en backend: 56 distintos entre ambas, sin IDs nuevos o criterios sin verificación prevista. Se comprobaron los 20 tickets y las rutas existentes/nuevas de las tablas. La evidencia de comprobación del harness y sus límites se registra en la spec backend; no se ejecutaron pruebas E2 de interfaz ni revisión visual en navegador durante esta entrega.
+
+La revisión final verificó cero asociaciones criterio–ticket incorrectas respecto al backlog, apoyo transversal separado, GET de progreso obligatorio después del borrado global con prueba explícita y alcance accesible de T-18 ampliado al componente y su CSS. La revisión independiente confirmó esas correcciones. Esta spec queda **lista para aprobación documental**, sin considerarse aprobada ni implementada y sin pruebas funcionales de E2 ejecutadas.
