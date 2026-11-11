@@ -9,6 +9,7 @@ export default defineConfig({
       "tests/dominio/**/*.test.ts",
       "tests/meta-validacion.test.ts",
       "tests/configuracion-db.test.ts",
+      "tests/errores-http.test.ts",
     ],
     setupFiles: ["./tests/setup.ts"],
     clearMocks: true,
