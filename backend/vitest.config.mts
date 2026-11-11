@@ -8,6 +8,7 @@ export default defineConfig({
       "tests/infraestructura.test.ts",
       "tests/dominio/**/*.test.ts",
       "tests/meta-validacion.test.ts",
+      "tests/configuracion-db.test.ts",
     ],
     setupFiles: ["./tests/setup.ts"],
     clearMocks: true,
