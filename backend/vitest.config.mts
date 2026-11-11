@@ -1,0 +1,18 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  envDir: false,
+  test: {
+    environment: "node",
+    include: [
+      "tests/infraestructura.test.ts",
+      "tests/dominio/**/*.test.ts",
+      "tests/meta-validacion.test.ts",
+    ],
+    setupFiles: ["./tests/setup.ts"],
+    clearMocks: true,
+    restoreMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
+  },
+});
