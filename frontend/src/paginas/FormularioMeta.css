@@ -1,0 +1,328 @@
+.formulario-meta-page {
+  background: var(--paper);
+}
+
+.formulario-meta-page .meta-hero {
+  background: var(--accent);
+  padding: 55px clamp(20px, 5vw, 80px) 65px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.detalle-page.formulario-meta-page .page-head {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.detalle-page.formulario-meta-page .page-head .eyebrow,
+.detalle-page.formulario-meta-page .page-head p {
+  color: var(--ink);
+}
+
+.detalle-page.formulario-meta-page .page-head h1 {
+  font:
+    400 clamp(64px, 8vw, 116px) / 0.92 "Bootzy",
+    "Archivo Black",
+    sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  margin: 24px 0;
+}
+
+.formulario-meta-page .meta-body {
+  padding: 55px clamp(20px, 5vw, 80px) 100px;
+  max-width: 1460px;
+  margin: 0 auto;
+}
+
+.formulario-meta-page .meta-juego {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 40px;
+}
+
+.formulario-meta-page .meta-juego span,
+.formulario-meta-page legend span,
+.formulario-meta-page .meta-estado,
+.detalle-page .historial-meta-estado {
+  font:
+    700 11px / 1.5 "Space Mono",
+    monospace;
+  letter-spacing: 0.05em;
+}
+
+.formulario-meta-page .meta-juego strong {
+  font-size: clamp(24px, 3vw, 36px);
+  overflow-wrap: anywhere;
+}
+
+.formulario-meta-page .meta-form {
+  display: grid;
+  gap: 35px;
+}
+
+.formulario-meta-page fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.formulario-meta-page legend {
+  width: 100%;
+  font:
+    400 clamp(38px, 4vw, 58px) / 1.1 "Bootzy",
+    "Archivo Black",
+    sans-serif;
+  padding: 0 0 25px;
+  color: var(--ink);
+}
+
+.formulario-meta-page legend span {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.formulario-meta-page .meta-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 27px 22px;
+}
+
+.formulario-meta-page .meta-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.formulario-meta-page label {
+  color: var(--ink);
+  font:
+    700 13px / 1.5 "Space Mono",
+    monospace;
+}
+
+.formulario-meta-page input {
+  width: 100%;
+  min-width: 0;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 17px 18px;
+  background: var(--light);
+  color: var(--ink);
+  font: inherit;
+}
+
+.formulario-meta-page .meta-hitos {
+  display: grid;
+  gap: 22px;
+  margin: 22px 0;
+}
+
+.formulario-meta-page .meta-hito {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+  padding: 25px 22px;
+  border: 2px solid var(--ink);
+  background: var(--light);
+}
+
+.formulario-meta-page .meta-hito-numero {
+  font:
+    700 22px / 1.5 "Space Mono",
+    monospace;
+}
+
+.formulario-meta-page .meta-error-campo {
+  color: var(--ink);
+  margin: 0;
+  font-weight: 700;
+  border-left: 3px solid var(--ink);
+  padding-left: 10px;
+}
+
+.formulario-meta-page .meta-aviso {
+  padding: 20px;
+  border: 2px solid var(--ink);
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.formulario-meta-page .meta-submit,
+.formulario-meta-page .meta-secondary,
+.detalle-page .historial-metas .meta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 16px 22px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--light);
+  color: var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  font:
+    700 13px / 1.5 "Space Mono",
+    monospace;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.formulario-meta-page .meta-submit {
+  min-height: 58px;
+  background: var(--lime);
+}
+
+.formulario-meta-page .meta-link-button {
+  min-height: 44px;
+  border: 0;
+  padding: 10px;
+  background: transparent;
+  color: var(--ink);
+  font:
+    700 13px "Space Mono",
+    monospace;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.formulario-meta-page .meta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  padding-top: 25px;
+  border-top: 2px solid var(--ink);
+}
+
+.formulario-meta-page .meta-actions a {
+  padding: 12px 0;
+  color: var(--ink);
+  font:
+    700 13px "Space Mono",
+    monospace;
+}
+
+.formulario-meta-page .meta-desactivar {
+  border: 2px solid var(--ink);
+  background: var(--light);
+  padding: 25px;
+}
+
+.formulario-meta-page .meta-desactivar p {
+  margin-top: 0;
+}
+
+.formulario-meta-page button:disabled,
+.formulario-meta-page input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.formulario-meta-page :is(a, button, input):focus-visible,
+.detalle-page .historial-metas a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 5px;
+}
+
+.detalle-page .historial-metas {
+  min-width: 0;
+  padding: 65px clamp(20px, 5vw, 80px) 80px;
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 2px solid var(--ink);
+}
+
+.detalle-page .historial-metas-heading h2 {
+  margin: 20px 0;
+  font:
+    400 clamp(55px, 6vw, 85px) / 0.92 "Bootzy",
+    "Archivo Black",
+    sans-serif;
+  color: var(--ink);
+}
+
+.detalle-page .historial-metas-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 27px 22px;
+  padding: 0;
+  margin: 35px 0 0;
+  list-style: none;
+}
+
+.detalle-page .historial-meta {
+  min-width: 0;
+  padding: 25px;
+  border: 2px solid var(--ink);
+  background: var(--light);
+  overflow-wrap: anywhere;
+}
+
+.detalle-page .historial-meta-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.detalle-page .historial-meta-titulo h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+}
+
+.detalle-page .historial-meta-estado {
+  padding: 8px 12px;
+  background: var(--lime);
+  border: 1px solid var(--ink);
+}
+
+.detalle-page .historial-meta-hitos {
+  padding: 0;
+  margin: 22px 0;
+  list-style: none;
+}
+
+.detalle-page .historial-meta-hitos li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+@media (max-width: 760px) {
+  .formulario-meta-page .meta-form-grid,
+  .detalle-page .historial-metas-lista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formulario-meta-page .meta-hito {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .formulario-meta-page .meta-hito-numero {
+    font-size: 18px;
+  }
+
+  .formulario-meta-page .meta-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formulario-meta-page *,
+  .detalle-page .historial-metas * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,22 +1,156 @@
-import {Videojuego,IVideojuego,estados,generos} from '../modelos/Videojuego.model';
-import {Partida} from '../modelos/Partida.model';
-import {ApiError} from '../apiError';
-import mongoose from 'mongoose';
-export function validarId(id:string){if (!mongoose.isValidObjectId(id)) throw new ApiError(400,'ID mal formado');}
-export async function listar(filtros:{genero?:string;estado?:string;buscar?:string}){
- const q:any={};
- if(filtros.genero){if(!generos.includes(filtros.genero as any))throw new ApiError(400,'Género inválido');q.genero=filtros.genero;}
- if(filtros.estado){if(!estados.includes(filtros.estado as any))throw new ApiError(400,'Estado inválido');q.estado=filtros.estado;}
- if(filtros.buscar)q.nombre={$regex:filtros.buscar.replace(/[^a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ ]/g,''),$options:'i'};
- return Videojuego.find(q).sort({createdAt:-1});
+import {
+  Videojuego,
+  IVideojuego,
+  estados,
+  generos,
+} from "../modelos/Videojuego.model";
+import { Partida } from "../modelos/Partida.model";
+import { ApiError } from "../apiError";
+import mongoose from "mongoose";
+import { Meta } from "../modelos/Meta.model";
+import {
+  guardarVideojuego,
+  transaccion,
+  type OpcionesTransaccion,
+} from "./integridad.service";
+export function validarId(id: string) {
+  if (!mongoose.isValidObjectId(id)) throw new ApiError(400, "ID mal formado");
 }
-export async function obtener(id:string){validarId(id);const x=await Videojuego.findById(id);if(!x)throw new ApiError(404,'Videojuego no encontrado');return x;}
-export async function crear(datos:Partial<IVideojuego>){return Videojuego.create(datos);}
-export async function actualizar(id:string,datos:Partial<IVideojuego>){validarId(id);const x=await Videojuego.findById(id);if(!x)throw new ApiError(404,'Videojuego no encontrado');
- const permitidos=['nombre','genero','plataforma','estado','portada','descripcion','calificacion','logros'];
- for(const k of permitidos){if(Object.prototype.hasOwnProperty.call(datos,k))(x as any)[k]=(datos as any)[k];}
- await x.save();return x;}
-export async function eliminar(id:string){validarId(id);const x=await obtener(id);await Partida.deleteMany({videojuego:x._id});await x.deleteOne();}
-export async function marcarLogro(id:string,logroId:string,obtenido:boolean){const x=await obtener(id);validarId(logroId);const logro=x.logros.id(logroId);if(!logro)throw new ApiError(404,'Logro no encontrado');logro.obtenido=obtenido;await x.save();return x;}
-export async function resumen(id:string){await obtener(id);const partidas=await Partida.find({videojuego:id}).sort({fecha:-1,createdAt:-1,_id:-1});
- const minutosTotales=partidas.reduce((s,p)=>s+p.duracionMinutos,0);return {videojuego:id,totalPartidas:partidas.length,minutosTotales,horasTotales:Math.round(minutosTotales/60*100)/100,ultimaSesion:partidas[0]?.fecha??null,porcentajeAvanceActual:partidas[0]?.porcentajeAvance??0};}
+export async function listar(filtros: {
+  genero?: string;
+  estado?: string;
+  buscar?: string;
+}) {
+  const q: any = {};
+  if (filtros.genero) {
+    if (!generos.includes(filtros.genero as any))
+      throw new ApiError(400, "Género inválido");
+    q.genero = filtros.genero;
+  }
+  if (filtros.estado) {
+    if (!estados.includes(filtros.estado as any))
+      throw new ApiError(400, "Estado inválido");
+    q.estado = filtros.estado;
+  }
+  if (filtros.buscar)
+    q.nombre = {
+      $regex: filtros.buscar.replace(/[^a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ ]/g, ""),
+      $options: "i",
+    };
+  return Videojuego.find(q).sort({ createdAt: -1 });
+}
+export async function obtener(id: string) {
+  validarId(id);
+  const x = await Videojuego.findById(id);
+  if (!x) throw new ApiError(404, "Videojuego no encontrado");
+  return x;
+}
+export async function crear(datos: Partial<IVideojuego>) {
+  return Videojuego.create(datos);
+}
+export async function actualizar(
+  id: string,
+  datos: Partial<IVideojuego>,
+  opciones?: OpcionesTransaccion,
+): Promise<IVideojuego> {
+  validarId(id);
+  const permitidos = [
+    "nombre",
+    "genero",
+    "plataforma",
+    "estado",
+    "portada",
+    "descripcion",
+    "calificacion",
+    "logros",
+  ];
+  const cambios: Record<string, unknown> = {};
+  for (const campo of permitidos) {
+    if (Object.prototype.hasOwnProperty.call(datos, campo))
+      cambios[campo] = (datos as unknown as Record<string, unknown>)[campo];
+  }
+  await Meta.init();
+  return transaccion(async (contexto) => {
+    // La lectura ocurre después de la guarda y se repite con cada intento del helper.
+    await guardarVideojuego(id, contexto);
+    const x = await contexto.ejecutar((maxTimeMS) =>
+      Videojuego.findById(id).session(contexto.session).maxTimeMS(maxTimeMS),
+    );
+    if (!x) throw new ApiError(404, "Videojuego no encontrado");
+    const estado = Object.prototype.hasOwnProperty.call(cambios, "estado")
+      ? cambios.estado
+      : x.estado;
+    if (estado === "Completado") {
+      const activa = await contexto.ejecutar((maxTimeMS) =>
+        Meta.exists({ videojuego: id, activa: true })
+          .session(contexto.session)
+          .maxTimeMS(maxTimeMS),
+      );
+      if (activa)
+        throw new ApiError(
+          409,
+          "No se puede completar un videojuego con una meta activa",
+        );
+    }
+    contexto.comprobar();
+    x.set(cambios);
+    await contexto.ejecutar(() => x.save({ session: contexto.session }));
+    return x;
+  }, opciones);
+}
+export async function eliminar(id: string, opciones?: OpcionesTransaccion) {
+  validarId(id);
+  return transaccion(async (contexto) => {
+    await guardarVideojuego(id, contexto);
+    await contexto.ejecutar((maxTimeMS) =>
+      Partida.deleteMany(
+        { videojuego: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    await contexto.ejecutar((maxTimeMS) =>
+      Meta.deleteMany(
+        { videojuego: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    const borrado = await contexto.ejecutar((maxTimeMS) =>
+      Videojuego.deleteOne(
+        { _id: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    if (borrado.deletedCount !== 1)
+      throw new ApiError(404, "Videojuego no encontrado");
+  }, opciones);
+}
+export async function marcarLogro(
+  id: string,
+  logroId: string,
+  obtenido: boolean,
+) {
+  const x = await obtener(id);
+  validarId(logroId);
+  const logro = x.logros.id(logroId);
+  if (!logro) throw new ApiError(404, "Logro no encontrado");
+  logro.obtenido = obtenido;
+  await x.save();
+  return x;
+}
+export async function resumen(id: string) {
+  await obtener(id);
+  const partidas = await Partida.find({ videojuego: id }).sort({
+    fecha: -1,
+    createdAt: -1,
+    _id: -1,
+  });
+  const minutosTotales = partidas.reduce((s, p) => s + p.duracionMinutos, 0);
+  return {
+    videojuego: id,
+    totalPartidas: partidas.length,
+    minutosTotales,
+    horasTotales: Math.round((minutosTotales / 60) * 100) / 100,
+    ultimaSesion: partidas[0]?.fecha ?? null,
+    porcentajeAvanceActual: partidas[0]?.porcentajeAvance ?? 0,
+  };
+}

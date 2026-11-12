@@ -1,0 +1,11 @@
+{
+  "name": "level-up-harness",
+  "private": true,
+  "scripts": {
+    "test:harness": "node --test .claude/hooks/harness.test.cjs",
+    "check:harness": "node .claude/hooks/verify-harness.cjs"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}

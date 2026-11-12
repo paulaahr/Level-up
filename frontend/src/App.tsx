@@ -1,5 +1,92 @@
-import {Link,NavLink,Route,Routes,useLocation} from 'react-router-dom';
-import {useEffect,useState} from 'react';
-import {Landing} from './paginas/Landing';import {Biblioteca} from './paginas/Biblioteca';import {Detalle} from './paginas/Detalle';import {FormularioJuego} from './paginas/FormularioJuego';import {Partidas} from './paginas/Partidas';import {FormularioPartida} from './paginas/FormularioPartida';
-function ScrollReset(){const {pathname}=useLocation();useEffect(()=>{window.scrollTo({top:0,behavior:'instant'})},[pathname]);return null}
-export default function App(){const {pathname}=useLocation();const landing=pathname==='/';const [menu,setMenu]=useState(false);useEffect(()=>setMenu(false),[pathname]);return <div className="editorial-app"><ScrollReset/><header className={'editorial-nav '+(landing?'on-hero':'')}><Link className="editorial-brand" to="/">LEVEL<span>UP</span><b>✳</b></Link><nav className={menu?'mobile-open':''} aria-label="Navegación principal"><NavLink end to="/">INICIO</NavLink><NavLink to="/biblioteca">BIBLIOTECA</NavLink><NavLink to="/partidas">SESIONES</NavLink><Link to="/videojuegos/nuevo" className="nav-action">+ NUEVO JUEGO ↗</Link></nav><button className="menu-toggle" aria-expanded={menu} aria-label="Abrir navegación" onClick={()=>setMenu(v=>!v)}>{menu?'CERRAR ×':'MENÚ ☰'}</button></header><main className={landing?'landing-main':'inner-main'}><Routes><Route path="/" element={<Landing/>}/><Route path="/biblioteca" element={<Biblioteca/>}/><Route path="/videojuegos/nuevo" element={<FormularioJuego/>}/><Route path="/videojuegos/:id/editar" element={<FormularioJuego/>}/><Route path="/videojuegos/:id" element={<Detalle/>}/><Route path="/partidas" element={<Partidas/>}/><Route path="/partidas/nueva" element={<FormularioPartida/>}/><Route path="*" element={<div className="message"><h2>404 / NIVEL NO ENCONTRADO</h2><Link className="btn primary" to="/">VOLVER AL INICIO ↗</Link></div>}/></Routes></main>{!landing&&<footer className="inner-footer"><span>LEVEL UP® / PERSONAL GAME ARCHIVE</span><Link to="/">BACK TO START ↗</Link><span>2026 / ALL RIGHTS TO PLAY</span></footer>}</div>}
+import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Landing } from "./paginas/Landing";
+import { Biblioteca } from "./paginas/Biblioteca";
+import { Detalle } from "./paginas/Detalle";
+import { FormularioJuego } from "./paginas/FormularioJuego";
+import { Partidas } from "./paginas/Partidas";
+import { FormularioPartida } from "./paginas/FormularioPartida";
+import { FormularioMeta } from "./paginas/FormularioMeta";
+function ScrollReset() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
+export default function App() {
+  const { pathname } = useLocation();
+  const landing = pathname === "/";
+  const [menu, setMenu] = useState(false);
+  useEffect(() => setMenu(false), [pathname]);
+  return (
+    <div className="editorial-app">
+      <ScrollReset />
+      <header className={"editorial-nav " + (landing ? "on-hero" : "")}>
+        <Link className="editorial-brand" to="/">
+          LEVEL<span>UP</span>
+          <b>✳</b>
+        </Link>
+        <nav
+          className={menu ? "mobile-open" : ""}
+          aria-label="Navegación principal"
+        >
+          <NavLink end to="/">
+            INICIO
+          </NavLink>
+          <NavLink to="/biblioteca">BIBLIOTECA</NavLink>
+          <NavLink to="/partidas">SESIONES</NavLink>
+          <Link to="/videojuegos/nuevo" className="nav-action">
+            + NUEVO JUEGO ↗
+          </Link>
+        </nav>
+        <button
+          className="menu-toggle"
+          aria-expanded={menu}
+          aria-label="Abrir navegación"
+          onClick={() => setMenu((v) => !v)}
+        >
+          {menu ? "CERRAR ×" : "MENÚ ☰"}
+        </button>
+      </header>
+      <main className={landing ? "landing-main" : "inner-main"}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/biblioteca" element={<Biblioteca />} />
+          <Route path="/videojuegos/nuevo" element={<FormularioJuego />} />
+          <Route path="/videojuegos/:id/editar" element={<FormularioJuego />} />
+          <Route path="/videojuegos/:id" element={<Detalle />} />
+          <Route
+            path="/videojuegos/:id/meta/nueva"
+            element={<FormularioMeta />}
+          />
+          <Route
+            path="/videojuegos/:id/metas/:metaId/editar"
+            element={<FormularioMeta />}
+          />
+          <Route path="/partidas" element={<Partidas />} />
+          <Route path="/partidas/nueva" element={<FormularioPartida />} />
+          <Route path="/partidas/:id/editar" element={<FormularioPartida />} />
+          <Route
+            path="*"
+            element={
+              <div className="message">
+                <h2>404 / NIVEL NO ENCONTRADO</h2>
+                <Link className="btn primary" to="/">
+                  VOLVER AL INICIO ↗
+                </Link>
+              </div>
+            }
+          />
+        </Routes>
+      </main>
+      {!landing && (
+        <footer className="inner-footer">
+          <span>LEVEL UP® / PERSONAL GAME ARCHIVE</span>
+          <Link to="/">BACK TO START ↗</Link>
+          <span>2026 / ALL RIGHTS TO PLAY</span>
+        </footer>
+      )}
+    </div>
+  );
+}
