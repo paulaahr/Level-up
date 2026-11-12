@@ -3,6 +3,7 @@ import { defineConfig } from "@playwright/test";
 // Navegador real con API interceptada: no verifica backend ni MongoDB.
 export default defineConfig({
   testDir: "./e2e",
+  outputDir: "./test-results/controlado",
   fullyParallel: false,
   workers: 1,
   retries: 0,
