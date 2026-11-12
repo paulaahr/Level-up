@@ -1,7 +1,8 @@
-import { defineConfig } from "vitest/config";
+import type { ViteUserConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
+// En Vite 5, envDir:false no desactiva loadEnv. El lanzador exige envFile:false.
+const config = {
   envDir: false,
   plugins: [react()],
   define: {
@@ -18,4 +19,5 @@ export default defineConfig({
     unstubGlobals: true,
     unstubEnvs: true,
   },
-});
+} satisfies Omit<ViteUserConfig, "envDir"> & { envDir: false };
+export default config;

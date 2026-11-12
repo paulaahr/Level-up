@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run --config vitest.config.ts",
+    "test": "node scripts/entorno-aislado.mjs test",
+    "dev:aislado": "node scripts/entorno-aislado.mjs serve",
+    "build:aislado": "tsc --noEmit --incremental false && node scripts/entorno-aislado.mjs build",
     "test:e2e": "playwright test --config playwright.config.ts"
   },
   "dependencies": {
