@@ -10,6 +10,8 @@ export default defineConfig({
       "tests/meta-validacion.test.ts",
       "tests/configuracion-db.test.ts",
       "tests/errores-http.test.ts",
+      "tests/metas-http.test.ts",
+      "tests/metas-concurrencia.test.ts",
     ],
     setupFiles: ["./tests/setup.ts"],
     clearMocks: true,

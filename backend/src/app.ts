@@ -9,6 +9,7 @@ import { env } from "./config/env";
 
 import { videojuegosRouter } from "./routes/videojuegos.routes";
 import { partidasRouter } from "./routes/partidas.routes";
+import { metasRouter } from "./routes/metas.routes";
 
 export function crearApp() {
   const app = express();
@@ -33,6 +34,7 @@ export function crearApp() {
 
   app.use("/api/videojuegos", videojuegosRouter);
   app.use("/api/partidas", partidasRouter);
+  app.use("/api/metas", metasRouter);
 
   app.use((req: Request, _res: Response, next: express.NextFunction) => {
     next(
