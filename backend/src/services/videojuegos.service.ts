@@ -98,11 +98,31 @@ export async function actualizar(
     return x;
   }, opciones);
 }
-export async function eliminar(id: string) {
+export async function eliminar(id: string, opciones?: OpcionesTransaccion) {
   validarId(id);
-  const x = await obtener(id);
-  await Partida.deleteMany({ videojuego: x._id });
-  await x.deleteOne();
+  return transaccion(async (contexto) => {
+    await guardarVideojuego(id, contexto);
+    await contexto.ejecutar((maxTimeMS) =>
+      Partida.deleteMany(
+        { videojuego: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    await contexto.ejecutar((maxTimeMS) =>
+      Meta.deleteMany(
+        { videojuego: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    const borrado = await contexto.ejecutar((maxTimeMS) =>
+      Videojuego.deleteOne(
+        { _id: id },
+        { session: contexto.session, maxTimeMS },
+      ),
+    );
+    if (borrado.deletedCount !== 1)
+      throw new ApiError(404, "Videojuego no encontrado");
+  }, opciones);
 }
 export async function marcarLogro(
   id: string,

@@ -15,6 +15,7 @@ const wrapCancelable =
       req: Request,
       opciones: OpcionesTransaccion,
     ) => Promise<Record<string, unknown>>,
+    estado = 200,
   ): RequestHandler =>
   (req, res, next): void => {
     const cancelacion = new AbortController();
@@ -26,8 +27,10 @@ const wrapCancelable =
     if (req.aborted || res.destroyed) cancelacion.abort();
     operacion(req, { signal: cancelacion.signal })
       .then((datos) => {
-        if (!res.destroyed && !res.writableEnded)
-          res.json({ ...datos, requestId: req.id });
+        if (!res.destroyed && !res.writableEnded) {
+          if (estado === 204) res.status(204).send();
+          else res.status(estado).json({ ...datos, requestId: req.id });
+        }
       })
       .catch(next)
       .finally(() => {
@@ -63,10 +66,10 @@ export const progresoSemanal = wrapCancelable(async (req, opciones) => {
     }),
   };
 });
-export const eliminar = wrap(async (req, res) => {
-  await s.eliminar(req.params.id);
-  res.status(204).send();
-});
+export const eliminar = wrapCancelable(async (req, opciones) => {
+  await s.eliminar(req.params.id, opciones);
+  return {};
+}, 204);
 export const marcarLogro = wrap(async (req, res) => {
   if (typeof req.body.obtenido !== "boolean") {
     res

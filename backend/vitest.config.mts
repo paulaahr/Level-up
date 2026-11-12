@@ -14,6 +14,8 @@ export default defineConfig({
       "tests/metas-concurrencia.test.ts",
       "tests/estados-meta.test.ts",
       "tests/progreso-http.test.ts",
+      "tests/partidas-http.test.ts",
+      "tests/eliminacion-integridad.test.ts",
     ],
     setupFiles: ["./tests/setup.ts"],
     clearMocks: true,
