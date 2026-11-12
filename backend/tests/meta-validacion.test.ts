@@ -25,6 +25,15 @@ const datosActualizacion = () => ({
 });
 const nuevaMeta = (cambios: Record<string, unknown> = {}) =>
   new Meta({ ...datosCreacion(), ...cambios });
+
+it("T-06: el hito embebido no registra una version inexistente al abortar", () => {
+  const esquemaHito = Meta.schema.path("hitos").schema;
+  if (!esquemaHito) throw new Error("Falta el esquema de hitos embebidos");
+  expect(esquemaHito.options.versionKey).toBe(false);
+  expect(esquemaHito.options.strict).toBe("throw");
+  expect(esquemaHito.path("__v")).toBeUndefined();
+  expect(Meta.schema.options.versionKey).toBe("__v");
+});
 const casosDeValores = (...valores: unknown[]): [unknown][] =>
   valores.map((valor): [unknown] => [valor]);
 

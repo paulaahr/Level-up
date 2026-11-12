@@ -40,7 +40,7 @@ const HitoSchema = new Schema<IHitoMeta>(
       },
     },
   },
-  { _id: false, strict: "throw" },
+  { _id: false, versionKey: false, strict: "throw" },
 );
 
 function referenciaVideojuego(valor: unknown): Types.ObjectId {
