@@ -3,6 +3,9 @@ import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   testDir: "./e2e-real",
+  globalTeardown: fileURLToPath(
+    new URL("./scripts/cerrar-integracion.mjs", import.meta.url),
+  ),
   outputDir: "./test-results/real",
   workers: 1,
   retries: 0,

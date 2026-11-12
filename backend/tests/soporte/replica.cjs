@@ -41,7 +41,12 @@ async function iniciarReplica(nombre = "level_up_integracion") {
     uri,
     replica,
     async cerrar() {
-      await replica.stop({ doCleanup: true, force: true });
+      const detenida = await replica.stop({ doCleanup: true, force: true });
+      assert.equal(
+        detenida,
+        true,
+        "No se confirmó el cierre del replica aislado",
+      );
     },
   };
 }
