@@ -199,11 +199,6 @@ describe("T-13 / CA-E2-44 a CA-E2-46: contrato controlado sin MongoDB", () => {
     // Solo cancelación cooperativa; no afirma interrupción de comandos ni rollback real.
   });
 });
-describe("T-13: integración real pendiente", () => {
-  it.todo(
-    "CA-E2-45: rollback observado ante fallos de cada paso y resultado desconocido de commit",
-  );
-  it.todo(
-    "CA-E2-46: carreras reales creación de hijos y eliminación del padre sin huérfanos",
-  );
-});
+// Rollback, confirmación recuperada de commit y carreras reales de T-13:
+// tests/integracion/e2-real.test.ts, "T-13 / CA-E2-45" y "T-13 / CA-E2-46".
+// Ejecutar test:integration; estos mocks no acreditan rollback del servidor.

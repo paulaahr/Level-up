@@ -659,20 +659,6 @@ describe("T-05: API de metas sin MongoDB, adaptador controlado", () => {
   });
 });
 
-describe("T-05: persistencia real - integracion pendiente con replica set aislado", () => {
-  it.todo(
-    "CA-E2-01: crear/consultar meta con timestamps persistidos y actualizados",
-  );
-  it.todo(
-    "CA-E2-03: horas invalidas responden 400 y no alteran la meta persistida",
-  );
-  it.todo(
-    "CA-E2-04: dias invalidos responden 400 y no alteran la meta persistida",
-  );
-  it.todo(
-    "CA-E2-05: seis hitos responden 400 sin reemplazo parcial del arreglo",
-  );
-  it.todo(
-    "CA-E2-06: hito invalido responde 400 y conserva todos los campos previos",
-  );
-});
+// T-05: persistencia real separada de estos mocks HTTP.
+// tests/integracion/e2-real.test.ts: "T-05 / CA-E2-01" y
+// "T-05 / CA-E2-03" a "T-05 / CA-E2-06". Ejecutar test:integration.

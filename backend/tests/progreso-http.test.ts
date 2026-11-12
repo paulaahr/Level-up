@@ -707,11 +707,6 @@ describe("T-11: controles unitarios del reloj de consulta con MongoDB simulado",
   });
 });
 
-describe("T-11: integracion real pendiente con replica set aislado", () => {
-  it.todo(
-    "CA-E2-13 / CA-E2-30: juego, meta e historial se leen desde un snapshot real consistente ante cambios concurrentes",
-  );
-  it.todo(
-    "CA-E2-22 / CA-E2-24: datos persistidos en al menos cinco dias producen racha interrumpida y mejor historica correctas",
-  );
-});
+// Snapshot e historial persistidos: tests/integracion/e2-real.test.ts,
+// "T-11 / CA-E2-13 / CA-E2-30" y "T-11 / CA-E2-22 / CA-E2-24".
+// Se ejecutan con test:integration, separados de estos mocks HTTP.

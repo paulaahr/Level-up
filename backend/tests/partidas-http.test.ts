@@ -330,11 +330,9 @@ describe("T-12 / CA-E2-37 a CA-E2-42: contratos HTTP con MongoDB simulado", () =
     expect(r.json?.error).toBe("Error interno del servidor");
   });
 });
-describe("T-12: integración real pendiente", () => {
-  it.todo(
-    "registrar/editar/eliminar y releer progreso persistido con transacciones y sin cambios parciales",
-  );
-});
+// Flujo persistido de registro/edición/borrado y progreso:
+// tests/integracion/e2-real.test.ts, "T-12 / CA-E2-37 a CA-E2-42".
+// Ejecutar test:integration; estos mocks HTTP no acreditan persistencia.
 describe("T-12: validación de entrada pura, sin HTTP ni MongoDB", () => {
   it.each([
     "2026-02-29T12:00:00Z",

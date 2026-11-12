@@ -342,11 +342,6 @@ describe("T-06 / CA-E2-35: transición protegida con HTTP y persistencia simulad
   });
 });
 
-describe("T-06 / CA-E2-35: integración real pendiente", () => {
-  it.todo(
-    "carrera crear/activar meta frente a completar juego, con sesión e índice reales",
-  );
-  it.todo(
-    "conflicto o fallo previo al commit conserva estado y conjunto completo con rollback observado",
-  );
-});
+// Las dos verificaciones reales de T-06 / CA-E2-35 (carrera y rollback)
+// están en tests/integracion/e2-real.test.ts, bajo esos IDs.
+// Ejecutar test:integration; estos mocks no prueban atomicidad del servidor.
