@@ -653,14 +653,9 @@ describe("T-05: API de metas sin MongoDB, adaptador controlado", () => {
     // No demuestra interrupcion del comando en vuelo ni rollback en MongoDB.
   });
 
-  it("no incorpora DELETE de metas ni progreso semanal fuera del alcance", async () => {
+  it("no incorpora DELETE de metas: la operación aprobada es desactivar", async () => {
     const eliminacion = await pedir("DELETE", `/api/metas/${idMeta}`);
-    const progreso = await pedir(
-      "GET",
-      `/api/videojuegos/${juego}/progreso-semanal`,
-    );
     expect(eliminacion.status).toBe(404);
-    expect(progreso.status).toBe(404);
   });
 });
 

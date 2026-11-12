@@ -3,6 +3,7 @@ import * as c from "../controllers/videojuegos.controller";
 import * as metas from "../controllers/metas.controller";
 export const videojuegosRouter = Router();
 videojuegosRouter.get("/:id/metas", metas.listarDeVideojuego);
+videojuegosRouter.get("/:id/progreso-semanal", c.progresoSemanal);
 videojuegosRouter.get("/", c.listar);
 videojuegosRouter.get("/:id/resumen", c.resumen);
 videojuegosRouter.get("/:id/partidas", c.listarPartidas);
