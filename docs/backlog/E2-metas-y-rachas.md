@@ -445,3 +445,34 @@ Antes de implementar debe aprobarse la spec de cada alcance, con tablas criterio
 - Revisión de coherencia de los escenarios con las reglas aprobadas y los límites de diseño. La validación de referencias por sí sola no demuestra corrección del producto.
 - `npm.cmd run test:harness`: seis tests aprobados, sin fallos ni omitidos. `npm.cmd run check:harness`: aprobado. Son verificaciones del harness, no tests funcionales de E2.
 - Formato del nuevo documento comprobado con Prettier. No se ejecutaron pruebas de aplicación ni se implementaron funcionalidades para verificar los escenarios propuestos.
+
+## Estado de cierre local — T-19/T-20, 11 de noviembre de 2026
+
+Esta actualización registra resultados; no modifica historias, criterios, decisiones ni dependencias. Evidencia detallada y límites: [AUDITORIA.md](../AUDITORIA.md). Las specs aprobadas permanecen intactas.
+
+| Ticket | Estado al cierre local                                                            | Evidencia                                                                                                                                          |
+| ------ | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-01   | Verificado: suites separadas, replica set efímero y runners sin archivos privados | Scripts npm, configuración y registro de ejecuciones de auditoría                                                                                  |
+| T-02   | Verificado: D-04 pagada                                                           | CA-E2-54/55, tests unitarios y config/conexión genuinas contra replica local                                                                       |
+| T-03   | Verificado: D-03 pagada                                                           | CA-E2-52/53, JSON mal formado correlacionado y errores 400/404/409/500                                                                             |
+| T-04   | Verificado: modelo y validaciones                                                 | Tests de modelo, entrada y persistencia con timestamps                                                                                             |
+| T-05   | Verificado: CRUD e histórico                                                      | HTTP controlado, integración MongoDB y UI real                                                                                                     |
+| T-06   | Verificado: unicidad y estado protegido                                           | Índice único real, carreras, reactivación y conflictos; regresión de hitos 500→409                                                                 |
+| T-07   | Verificado: pruebas de semana, horas, días y cumplimiento                         | Pruebas puras sin MongoDB, separadas de su implementación                                                                                          |
+| T-08   | Verificado: semana, horas, días y cumplimiento                                    | Pruebas puras, HTTP y presentación; límites temporales y redondeo                                                                                  |
+| T-09   | Verificado: pruebas de rachas e hitos                                             | Pruebas puras de rachas, hitos y regresión de avance E1                                                                                            |
+| T-10   | Verificado: cálculo de rachas e hitos                                             | Dominio puro y actividad/hitos persistidos                                                                                                         |
+| T-11   | Verificado: progreso semanal                                                      | Snapshot intercalado real, actividad vacía y HTTP; UI integrada                                                                                    |
+| T-12   | Verificado: edición y rechazo de fechas futuras                                   | POST/PUT/DELETE y progreso releído con MongoDB real                                                                                                |
+| T-13   | Verificado: borrado e integridad en los fallos ensayados                          | Fallos por etapa y carreras Meta/Partida contra eliminación                                                                                        |
+| T-14   | Verificado: servicios frontend                                                    | Contratos controlados y consumo real                                                                                                               |
+| T-15   | Verificado: formularios e histórico                                               | 36 tests de formulario y recorridos de navegador                                                                                                   |
+| T-16   | Verificado: sección de progreso                                                   | Componentes y navegador con actividad real                                                                                                         |
+| T-17   | Verificado: registro/edición/borrado y refresco                                   | Interacción, desmontaje y GET posterior, incluido historial global                                                                                 |
+| T-18   | Verificado en alcance E2                                                          | Teclado, nombres/foco, contraste, responsive y movimiento reducido                                                                                 |
+| T-19   | Cerrado para el entorno local aprobado                                            | 533 backend sin DB + 21 integración real + 99 frontend + 40 navegador interceptado + 12 navegador real; cero casos pendientes de la lista original |
+| T-20   | Cerrado documentalmente para lo construido                                        | Auditoría de 99 filas/56 IDs, bitácora de ocho momentos, README, trazabilidad y límites explícitos                                                 |
+
+D-06 a D-11 conservan sus motivos para diferir; no se pagan con este cierre. D-01/D-02/D-05 tienen evidencia en sus tickets y en la auditoría. El replica set tiene un nodo: no se extrapolan resultados a particiones persistentes, elecciones multinodo ni garantías absolutas de diez segundos.
+
+Quedan fuera de este cierre autorizado el despliegue en Render, la verificación de URLs públicas con E2, la apertura/revisión del pull request, el merge a main y la demo final. Los avisos que requieren migraciones mayores se conservan como riesgos en la auditoría; no se fuerzan actualizaciones incompatibles.

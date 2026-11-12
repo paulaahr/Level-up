@@ -1,7 +1,7 @@
 # LEVEL UP
 
 Diario de Progreso Gamer: biblioteca, logros y sesiones con resumen del servidor.
-E2 incorporará metas y rachas siguiendo Spec-Driven Development (SDD).
+E2 incorpora metas y rachas siguiendo Spec-Driven Development (SDD).
 
 ## Stack y estructura
 
@@ -23,7 +23,9 @@ E2 incorporará metas y rachas siguiendo Spec-Driven Development (SDD).
 - Tipos sin emitir: ejecutar `node_modules/.bin/tsc --noEmit --incremental false`
   dentro de cada aplicación (en Windows, `node_modules/.bin/tsc.cmd`).
 - Harness: `npm ci --ignore-scripts`, `npm run test:harness`, `npm run check:harness`.
-- No existen todavía tests de aplicación ni script `test` en backend/frontend (D-02).
+- Tests backend: `npm --prefix backend run test:unit` y `run test:integration`.
+- Tests frontend: `npm --prefix frontend test`, `run test:e2e` y `run test:e2e:real`.
+- Frontend sin archivos de entorno: `npm --prefix frontend run build:aislado`.
 - No ejecutar arranque/build que cargue `.env`; usar configuración aislada explícita.
 
 ## Convenciones
